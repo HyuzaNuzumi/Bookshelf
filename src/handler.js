@@ -52,16 +52,19 @@ const addBookshelf = (request, h) => {
 };
 
 const getAllBookshelf = (request, h) => {
+  const { id } = request.params;
 
-  if (notes === undefined) {
+  const book = notes.filter((b) => b.id ===id)[0];
+
+  if (book !== undefined) {
     return h.response({
       status: 'success',
       data: {
-        books: [],
+        book
       },
     }).code(200);
   }
-  const filteredBooks = notes.map((book) => ({
+  const filteredBooks = book.map((book) => ({
     id: book.id,
     name: book.name,
     publisher: book.publisher
@@ -73,27 +76,23 @@ const getAllBookshelf = (request, h) => {
       books: filteredBooks,
     },
   }).code(200);
-
-
 };
 
 const getByIdBookshelf = (request, h) => {
   const { id } = request.params;
 
-  const book = book.filter((b) => b.id === id)[0];
+  const book = notes.filter((b) => b.id === id)[0];
   if (book !== undefined){
-    return {
+    return h.response({
       status: 'success',
       data: {
-        book: {
-          book,
-        },
+        book,
       },
-    };
+    }).code(200);
   }
   const response = h.response({
     status: 'fail',
-    message: 'Bukut tidak ditemukan',
+    message: 'Buku tidak ditemukan',
   });
   response.code(404);
   return response;
@@ -106,7 +105,7 @@ const editByBooks = (request, h) => {
 
   const updated  = new Date().toISOString();
 
-  const book = notes.finished((note) => note.id === id);
+  const book = notes.findIndex((note) => note.id === id);
 
   if (book !== -1) {
     notes[book] = {
@@ -115,14 +114,14 @@ const editByBooks = (request, h) => {
     };
 
     const response = h.response({
-      status: 'fail',
+      status: 'success',
       message: 'Buku berhasil ditambahkan',
     });
     response.code(200);
     return response;
   } if (!name){
     const response = h.response({
-      statas: 'fail',
+      status: 'fail',
       message: 'Gagal memperbarui buku. Mohon isi nama buku',
     });
     response.code(400);
@@ -142,6 +141,7 @@ const deleteByBooks = (request, h) => {
 
   const index = notes.findIndex((note) => note.id === id);
   if (index !== -1) {
+    notes.splice(index, 1);
     const response = h.response({
       status: 'success',
       message: 'Buku berhasil dihapus',
@@ -150,7 +150,8 @@ const deleteByBooks = (request, h) => {
     return response;
   }
   const response = h.response({
-    status: 'Buku gagal dihapus. Id tidak ditemukan',
+    status: 'fail',
+    message: 'Buku gagal dihapus. Id tidak ditemukan',
   });
   response.code(404);
   return response;
