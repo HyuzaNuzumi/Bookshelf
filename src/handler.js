@@ -50,9 +50,9 @@ const addBookshelf = (request, h) => {
  };
 
 const getAllBookshelf = (request, h) => {
-  const { booksId} = request.params;
+  const { booksId } = request.params;
 
-  const book = notes.filter((b) => b.id === id)[0];
+  const book = notes.filter((b) => b.id === booksId)[0];
   if (book !== undefined) {
     return response({
       status : 'success',
