@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-const { addBookshelf, getAllBookshelf, getByIdBookshelf, editByBooks } = require('./handler');
+const { addBookshelf, getAllBookshelf, getByIdBookshelf, editByBooks, editBookshelf, deleteBooks } = require('./handler');
 
 const routes = [
   {
@@ -20,12 +20,12 @@ const routes = [
   {
     method: 'PUT',
     path: '/books/{bookId}',
-    handler: editByBooks,
+    handler: editBookshelf,
   },
   {
     method: 'DELETE',
     path: '/books/{bookId}',
-    handler: () => {},
+    handler: deleteBooks,
   }
 ];
 
