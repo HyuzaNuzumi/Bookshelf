@@ -49,7 +49,7 @@ const addBookshelf = (request, h) => {
   }
  };
 
-const getAllBookshelf = () => {
+const getAllBookshelf = (request, h) => {
   const { booksId} = request.params;
 
   const book = notes.filter((b) => b.id === id)[0];
