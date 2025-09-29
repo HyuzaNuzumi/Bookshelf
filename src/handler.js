@@ -1,6 +1,5 @@
 const { nanoid } = require('nanoid');
 const notes = require('./notes');
-const { request } = require('http');
 
 const addBookshelf = (request, h) => {
   const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
@@ -100,14 +99,14 @@ const editBookshelf = (request, h) => {
 
   const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
 
-  const updated = new Date().toDateString();
+  const updatedAt = new Date().toDateString();
 
-  const book = notes.findIndex((b) => b.id === booksId);
+  const book = notes.findIndex((books) => books.id === booksId);
 
-  if (book !== -1 ) {
+  if(book === -1) {
     notes[book] = {
       ...notes[book],
-      name, year, author, summary, publisher, pageCount, readPage, reading, updated,
+      name, year, author, summary, publisher, pageCount, readPage, reading, updatedAt,
     };
 
     const response = h.response({
@@ -116,7 +115,7 @@ const editBookshelf = (request, h) => {
     });
     response.code(200);
     return response;
-  } if (!name) {
+  }if (!name) {
     const response = h.response({
       status : 'fail',
       message : 'Gagal memperbarui buku. Mohon isi nama buku',
@@ -136,9 +135,9 @@ const editBookshelf = (request, h) => {
 const deleteBooks = (request, h) => {
   const { booksId } = request.params;
 
-  const index = notes.findIndex((book) => book.id === booksId);
+  const index = books.findIndex((book) => book.id === booksId);
   if (index !== -1) {
-    notes.splice(index, 1);
+    books.splice(index, 1);
     const response = h.response({
       status : 'success',
       message : 'Buku berhasil dihapus',
