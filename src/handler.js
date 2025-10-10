@@ -1,8 +1,21 @@
 const { nanoid } = require('nanoid');
-const books = require('./books');
+const bok = require('./bok');
 
 const addBookshelf = (request, h) => {
   const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload;
+  if (!name) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
+    });
+    response.code(400);
+    return response;
+  } if (readPage > pageCount) {
+    const response = h.response({
+      status: 'fail',
+      message: "Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount"
+    })
+  }
   const id = nanoid(16);
   const insertedAt = new Date().toDateString();
   const finished = pageCount === readPage;
@@ -11,7 +24,52 @@ const addBookshelf = (request, h) => {
   const book = {
     id, name, year, author, summary, publisher, pageCount, readPage, finished, reading, insertedAt, updatedAt
   };
-  books.push(book);
+  bok.push(book);
 
-  const 
-};
+  const isSuccess = bok.filter((books) => books.id === id).length > 0;
+  if (isSuccess) {
+    const response = h.response({
+      status: 'success',
+      message: 'Buku berhasil ditambakan',
+      data: {
+        bookId: id,
+      },
+    });
+    response.code(201);
+    return response;
+  }
+  const response = h.response({
+    status: 'fail',
+    message: 'Buku gagal ditambahkan',
+  });
+  response.code(500);
+  return response;
+}
+
+const getAllBookshelf = () => ({
+  status: 'success',
+  data: {
+    bok,
+  },
+});
+
+const getByIdBookshelf = (request, h) => {
+  const { bookId } = request.params;
+  
+  const books = bok.filter((b) => b.id === bookId)[0];
+
+  if (!books) {
+    const response = h.response({
+      status: 'fail',
+      message: 'Buku tidak ditemukan'
+    });
+    response.code(404);
+    return response;
+  }
+  return h.response({
+    status: 'success',
+    data: {
+      books,
+    },
+  }).code(200);
+}
