@@ -1,5 +1,5 @@
 /* eslint-disable linebreak-style */
-const { addBookshelf, getAllBookshelf, getByIdBookshelf, editByBooks, editBookshelf, deleteBooks } = require('./handler');
+const { addBookshelf, getAllBookshelf, getByIdBookshelf, editByBooks, deleteByBooks } = require('./handler');
 
 const routes = [
   {
@@ -20,13 +20,14 @@ const routes = [
   {
     method: 'PUT',
     path: '/books/{bookId}',
-    handler: editBookshelf,
+    handler:  editByBooks,
   },
   {
     method: 'DELETE',
     path: '/books/{bookId}',
-    handler: deleteBooks,
-  }
+    handler: deleteByBooks,
+  },
 ];
+
 
 module.exports = routes;
