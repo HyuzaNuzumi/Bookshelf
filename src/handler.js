@@ -46,12 +46,31 @@ const addBookshelf = (request, h) => {
   return response;
 }
 
-const getAllBookshelf = () => ({
-  status: 'success',
-  data: {
-    bok,
-  },
-});
+const getAllBookshelf = (request, h) => {
+  const { id } = request.params;
+
+  const books = bok.filter((b) => b.id === id)[0];
+
+  if ( !books) {
+    return h.response({
+      status: 'success',
+      data: {
+        books
+      },
+    }).code(200);
+  }
+  const filterBooks = bok.map((book) => ({
+    id: book.id,
+    name: book.name,
+    publisher: book.publisher,
+  }));
+  return h.response({
+    status: 'success',
+    data: {
+      books: filterBooks
+    },
+  }).code(200);
+};
 
 const getByIdBookshelf = (request, h) => {
   const { bookId } = request.params;
